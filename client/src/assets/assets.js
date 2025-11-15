@@ -1,5 +1,5 @@
 import logo from "./logo.svg";
-import logo_full from "./logo_full.svg";
+import logo_full from "./logo_fullori.svg";
 import logo_full_dark from "./logo_full_dark.svg";
 import search_icon from "./search_icon.svg";
 import user_icon from "./user_icon.svg";
@@ -13,6 +13,7 @@ import bin_icon from "./bin_icon.svg";
 import logout_icon from "./logout_icon.svg";
 import diamond_icon from "./diamond_icon.svg";
 import gallery_icon from "./gallery_icon.svg";
+import logo_new from "./logo_full.png";
 
 import ai_image1 from "./ai_image1.jpg";
 import ai_image2 from "./ai_image2.jpg";
@@ -42,7 +43,8 @@ export const assets = {
     logout_icon,
     logo_full_dark,
     diamond_icon,
-    gallery_icon
+    gallery_icon,
+    logo_new,
 };
 
 export const dummyUserData = {
