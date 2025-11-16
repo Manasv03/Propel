@@ -14,3 +14,7 @@
 ::-webkit-scrollbar{
     display: none;
 }
+
+.reset-tw :not(pre):not(codee){
+    all: revert;
+}
