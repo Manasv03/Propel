@@ -1,17 +1,16 @@
-import React from 'react'
+import React,{ useState } from 'react'
 import { useAppContext } from '../context/AppContext'
 import { assets } from '../assets/assets'
 import moment from 'moment'
-import { Navigate } from 'react-router-dom'
 
-const SideBar = () => {
+const SideBar = ({isMenuOpen, setIsMenuOpen}) => {
 
   const {chats, setSelectedChat, theme, setTheme, user, navigate} = useAppContext();
 
-  const [search, setSearch]= React.useState('');
+  const [search, setSearch]=useState('');
 
   return (
-    <div className='flex flex-col h-screen min-w-72 p-5 from-[#242124]/30 to-[#000000]/30 border-r border-[#80609F]/30 backdrop-blur-3xl transition-all duration-500 max-md:absolute left-0 z-1'>
+    <div className={`flex flex-col h-screen min-w-72 p-5 from-[#242124]/30 to-[#000000]/30 border-r border-[#80609F]/30 backdrop-blur-3xl transition-all duration-500 max-md:absolute left-0 z-1 ${!isMenuOpen && 'max-md:-translate-x-full'} `}>
       <img src={theme === 'dark' ? assets.logo_new : assets.logo_new} alt='' className='w-full max-w-48'/>
 
       {/* NEw CHAT */}
@@ -30,7 +29,7 @@ const SideBar = () => {
       <div className='flex-1 overflow-y-scroll mt-3 text-sm space-y-3'>
         {
           chats.filter((chat)=>chat.messages[0] ? chat.messages[0]?.content.toLowerCase().includes(search.toLowerCase()) : chat.name.toLowerCase().includes(search.toLowerCase())).map((chat)=>(
-            <div key={chat._id} className='p-2 px-4 dark:bg-[#57317C]/10 border border-gray-300 dark:border-[#80609F]/15 rounded-2xl cursor-pointer flex justify-between group'>
+            <div onClick={()=>{navigate('/'); setSelectedChat(chat); setIsMenuOpen(false)}} key={chat._id} className='p-2 px-4 dark:bg-[#57317C]/10 border border-gray-300 dark:border-[#80609F]/15 rounded-2xl cursor-pointer flex justify-between group'>
               <div>
                 <p className='truncate w-full'>
                   {chat.messages.length > 0 ? chat.messages[0].content.slice(0,32) : chat.name}
@@ -44,7 +43,7 @@ const SideBar = () => {
       </div>
 
         {/* Community IMG */}
-      <div onClick={()=>{navigate('/community')}} className='flex items-center gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-2xl cursor-pointer hover:scale-103 transition-all'>
+      <div onClick={()=>{navigate('/community'); setIsMenuOpen(false)}} className='flex items-center gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-2xl cursor-pointer hover:scale-103 transition-all'>
         <img src={assets.gallery_icon} className='w-4.5 not-dark:invert' alt="" />
         <div className='flex flex-col text-sm'>
           <p>Community Images</p>
@@ -52,7 +51,7 @@ const SideBar = () => {
       </div>
 
       {/* CREDIT OPTION */}
-      <div onClick={()=>{navigate('/credits')}} className='flex items-center gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-2xl cursor-pointer hover:scale-103 transition-all'>
+      <div onClick={()=>{navigate('/credits'); setIsMenuOpen(false)}} className='flex items-center gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-2xl cursor-pointer hover:scale-103 transition-all'>
         <img src={assets.diamond_icon} className='w-4.5 dark:invert' alt="" />
         <div className='flex flex-col text-sm'>
           <p>Credits : {user?.credits}</p>
@@ -61,13 +60,13 @@ const SideBar = () => {
       </div>
 
         {/* DARK MODE */}
-      <div className='flex items-center gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-2xl'>
+      <div className='flex items-center justify-between gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-2xl'>
         <div className='flex items-center gap-2 text-sm'>
           <img src={assets.theme_icon} className='w-4 not-dark:invert' alt="" />
           <p>Dark Mode</p>
         </div>
         <label className='relative inline-flex cursor-pointer'>
-          <input onClick={()=>setTheme(theme === 'dark' ? 'light' : 'dark')} type="checkbox" className='sr-only peer' checked={theme === 'dark'}/>
+          <input onChange={()=>setTheme(theme === 'dark' ? 'light' : 'dark')} type="checkbox" className='sr-only peer' checked={theme === 'dark'}/>
           <div className='w-9 h-5 bg-gray-400 rounded-full peer-checked:bg-purple-600 transition-all'>
 
           </div>
@@ -75,6 +74,15 @@ const SideBar = () => {
         </label>
       </div>
 
+      {/* User ACCOUNT */}
+      <div className='flex items-center gap-3 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-2xl cursor-pointer group '>
+        <img src={assets.user_icon} className='w-7 rounded-full' alt="" />
+          <p className='flex-1 text-sm dark:text-primary truncate'>{user? user.name : 'Login Your Account'}</p>
+          {user && <img src={assets.logout_icon} className='h-5 cursor-pointer hidden not-dark:invert group-hover:block'/>}
+      </div>
+
+      <img onClick={()=>setIsMenuOpen(false)} src={assets.close_icon} className='absolute top-3 right-3 w-5 h-5 cursor-pointer md:hidden not-dark:invert' alt="" />
+      {/*  */}
     </div>
   )
 }
