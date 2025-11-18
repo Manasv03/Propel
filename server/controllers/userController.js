@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
 // Geneeate JWT Token
 const generateToken = (id) => {
@@ -23,6 +24,35 @@ export const registerUser = async (req, res) => {
 
         const token = generateToken(user._id);
         res.json({success:true, token})
+    } catch (error) {
+        return res.json({success: false, message: error.message})
+    }
+}
+
+// API to login a user
+export const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        const user = await User.findOne({ email })
+        if(user){
+            const isMatch = await bcrypt.compare(password, user.password);
+            if(isMatch){
+                const token = generateToken(user._id);
+                return res.json({success: true, token})
+            }
+        }
+        return res.json({success: false, message: "Invalid Email or Password"})
+    } catch (error) {
+        return res.json({success: false, message: error.message})
+    }
+}
+
+// API to get user details
+export const getUser = async (req, res) => {
+    try {
+        const user = req.user;
+        return res.json({success: true, user})
     } catch (error) {
         return res.json({success: false, message: error.message})
     }
