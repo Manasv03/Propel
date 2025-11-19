@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 
 const ChatSchema = new mongoose.Schema({
-    userId : {type: String, required: true, ref: 'User'},
+    userId : {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},
     userName : {type: String, required: true},
     name : {type: String, required: true},
     messages : [
         {
             isImages: {type: Boolean, required: true},
-            isPudlished: {type: Boolean, default: false},
+            isPublished: {type: Boolean, default: false},
             role: {type: String, required: true},
             content: {type: String, required: true},
             timestamp: {type: Number, required: true},
