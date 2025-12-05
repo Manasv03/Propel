@@ -21,7 +21,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.20.0",
     "openai": "^6.9.1",
-    "razorpay": "^2.9.6"
+    "razorpay": "^2.9.6",
+    "svix": "^1.81.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"

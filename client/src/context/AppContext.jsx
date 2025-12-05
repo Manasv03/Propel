@@ -13,6 +13,33 @@ export const AppContextProvider = ({children}) => {
     const [selectedChat, setSelectedChat] = useState(null);
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
+    const fetchUserFromBackend = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        setUser(null);
+        return;
+    }
+
+    try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/profile`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            setUser(data.user);
+        } else {
+            localStorage.removeItem('token');
+            setUser(null);
+        }
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        setUser(null);
+    }
+};
+
     const fetchUser = async () => {
         setUser(dummyUserData); // Replace with actual user fetching logic
     }

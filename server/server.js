@@ -5,6 +5,7 @@ import connectDB from './configs/db.js';
 import userRouter from './routes/userRoutes.js';
 import messageRouter from './routes/messageRoutes.js';
 import chatRouter from './routes/chatRoutes.js';
+import creditRoutes from './routes/creditRoutes.js';
 
 const app = express();
 
@@ -14,11 +15,12 @@ await connectDB();
 app.use(cors());
 app.use(express.json());
 
-//Routes
+// Routes
 app.get('/', (req, res) => res.send('Server is Live!'))
 app.use('/api/user', userRouter)
 app.use('/api/chat', chatRouter)
 app.use('/api/message', messageRouter)
+app.use('/api/credits', creditRoutes)
 
 const PORT = process.env.PORT || 3000;
 

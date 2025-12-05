@@ -52,7 +52,7 @@ export const dummyUserData = {
     "name": "GreatStack",
     "email": "admin@example.com",
     "password": "$2b$10$VESVdPDjL5LF.KCU6jKyqeXNSLASAAfpR2kkIJExtMO.PJvZJAudy",
-    "credits": 200,
+    "credits": 20,
 }
 
 // copy for server controllers
