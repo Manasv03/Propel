@@ -6,6 +6,7 @@ const transactionSchema = new mongoose.Schema({
     amount: { type: Number, required: true },
     credits: { type: Number, required: true },
     isPaid: { type: Boolean, required: false },
+    paymentStatus: {type: String, enum: ['pending', 'success', 'failed'], default: 'pending'},
     razorpayOrderId: {type: String},
     razorpayPaymentId: {type: String},
     razorpaySignature: {type: String},
