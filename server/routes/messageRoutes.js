@@ -1,10 +1,11 @@
 import express from 'express';
+import { textMessageController, imageMessageController} from '../controllers/messageController.js';
 import { protect } from '../middlewares/auth.js';
-import { imageMessageController, textMessageController } from '../controllers/messageController.js';
 
-const messageRouter = express.Router();
+const router = express.Router();
 
-messageRouter.post('/text', protect, textMessageController)
-messageRouter.post('/image', protect, imageMessageController)
+// Main routes
+router.post('/text', protect, textMessageController);
+router.post('/image', protect, imageMessageController);
 
-export default messageRouter;
+export default router;
