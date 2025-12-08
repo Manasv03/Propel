@@ -15,18 +15,18 @@ export const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
 
     try {
-        const userExists = await User.findOne({ email})
+        const userExists = await User.findOne({ email })
 
-        if(userExists) {
-            return res.json({success: false, message: "User Already Exists"})
+        if (userExists) {
+            return res.json({ success: false, message: "User Already Exists" })
         }
 
         const user = await User.create({ name, email, password });
 
         const token = generateToken(user._id);
-        res.json({success:true, token})
+        res.json({ success: true, token })
     } catch (error) {
-        return res.json({success: false, message: error.message})
+        return res.json({ success: false, message: error.message })
     }
 }
 
@@ -36,16 +36,16 @@ export const loginUser = async (req, res) => {
 
     try {
         const user = await User.findOne({ email })
-        if(user){
+        if (user) {
             const isMatch = await bcrypt.compare(password, user.password);
-            if(isMatch){
+            if (isMatch) {
                 const token = generateToken(user._id);
-                return res.json({success: true, token})
+                return res.json({ success: true, token })
             }
         }
-        return res.json({success: false, message: "Invalid Email or Password"})
+        return res.json({ success: false, message: "Invalid Email or Password" })
     } catch (error) {
-        return res.json({success: false, message: error.message})
+        return res.json({ success: false, message: error.message })
     }
 }
 
@@ -53,9 +53,9 @@ export const loginUser = async (req, res) => {
 export const getUser = async (req, res) => {
     try {
         const user = req.user;
-        return res.json({success: true, user})
+        return res.json({ success: true, user })
     } catch (error) {
-        return res.json({success: false, message: error.message})
+        return res.json({ success: false, message: error.message })
     }
 }
 
@@ -63,23 +63,23 @@ export const getUser = async (req, res) => {
 export const getPublishedImages = async (req, res) => {
     try {
         const publishedImageMessages = await Chat.aggregate([
-            {$unwind: "$messages"},
+            { $unwind: "$messages" },
             {
-                $match:{
+                $match: {
                     "messages.isImages": true,
                     "messages.isPublished": true
                 }
             },
             {
-                $project:{
+                $project: {
                     _id: 0,
-                    imageUrl: "$messages.imageUrl",
+                    imageUrl: "$messages.content",
                     userName: "$userName"
                 }
             }
         ])
-        res.json({success: true, images: publishedImageMessages.reverse()})
+        res.json({ success: true, images: publishedImageMessages.reverse() })
     } catch (error) {
-        res.json({success: false, message: error.message})
+        res.json({ success: false, message: error.message })
     }
 }
