@@ -2,14 +2,16 @@ import imagekit from "../configs/imagekit.js";
 import Chat from "../models/Chat.js";
 import User from "../models/User.js";
 import axios from "axios";
-import openai from "../configs/openai.js";
+import opensi from "../configs/openai.js";
+import genAI from "../configs/gemini.js";
+
 // Text-based AI controller
 export const textMessageController = async (req, res) => {
     try {
         const userId = req.user._id;
 
-         if(req.user.credits < 1) {
-            return res.json({ 
+        if(req.user.credits < 1) {
+            return res.status(402).json({ 
                 success: false, 
                 message: "You don't have enough credits to use this feature" 
             });
@@ -18,46 +20,83 @@ export const textMessageController = async (req, res) => {
         const { chatId, prompt } = req.body;
 
         const chat = await Chat.findOne({userId, _id: chatId});
-        chat.messages.push({ role: "user", content: prompt, timestamp: Date.now(), isImages: false });
-
-        const {choices} = await openai.chat.completions.create({
-            model: "gemini-2.0-flash",
-            messages: [
-                {
-                    role: "user",
-                    content: prompt,
-                },
-            ]
+        
+        if (!chat) {
+            return res.status(404).json({ 
+                success: false, 
+                message: "Chat not found" 
+            });
+        }
+        
+        chat.messages.push({ 
+            role: "user", 
+            content: prompt, 
+            timestamp: Date.now(), 
+            isImages: false 
         });
 
-        const reply = { ...choices[0].message, timestamp: Date.now(), isImages: false };
+        console.log('Generating response with Gemini...');
         
+        // Use Gemini 1.0 Pro (most stable and widely available)
+        const model = genAI.getGenerativeModel({ 
+            model: "gemini-1.5-flash",
+            generationConfig: {
+                temperature: 0.9,
+                maxOutputTokens: 2048,
+            }
+        });
+        
+        const result = await model.generateContent(prompt);
+        const response = result.response;
+        const text = response.text();
+        
+        console.log('✅ Response generated successfully');
+
+        const reply = { 
+            role: "assistant",
+            content: text,
+            timestamp: Date.now(), 
+            isImages: false 
+        };
+
+        res.json({ success: true, reply });
+
         chat.messages.push(reply);
         await chat.save();
         await User.updateOne({ _id: userId }, { $inc: { credits: -1 } });
 
     } catch (error) {
         console.error('❌ Text Message Error:', error);
+        console.error('Error details:', error.message);
         
-        // ✅ ALWAYS return proper JSON with status
-        if (error.message?.includes('quota') || error.message?.includes('429')) {
+        // Handle specific Gemini errors
+        if (error.message?.includes('RESOURCE_EXHAUSTED') || 
+            error.message?.includes('quota') || 
+            error.message?.includes('429')) {
             return res.status(429).json({ 
                 success: false, 
-                message: "Rate limit exceeded. Please wait 60 seconds and try again." // ✅ Clear message
+                message: "Rate limit exceeded. Please wait 60 seconds and try again."
             });
         }
         
-        if (error.message?.includes('API key')) {
+        if (error.message?.includes('API_KEY_INVALID') || 
+            error.message?.includes('INVALID_ARGUMENT')) {
             return res.status(500).json({ 
                 success: false, 
-                message: "AI service configuration error. Please contact support."
+                message: "API key error. Please check your Gemini API configuration."
             });
         }
         
-        // ✅ Default error response
+        if (error.message?.includes('PERMISSION_DENIED')) {
+            return res.status(500).json({ 
+                success: false, 
+                message: "API access denied. Please enable the Generative Language API in Google Cloud Console."
+            });
+        }
+        
         return res.status(500).json({ 
             success: false, 
-            message: error.message || "Failed to generate response. Please try again."
+            message: "Failed to generate response. Please try again."
         });
     }
 }
@@ -67,9 +106,8 @@ export const imageMessageController = async (req, res) => {
     try {
         const userId = req.user._id;
 
-        // Check credits
         if(req.user.credits < 2) {
-            return res.json({ 
+            return res.status(402).json({ 
                 success: false, 
                 message: "You don't have enough credits to use this feature" 
             });
@@ -78,6 +116,13 @@ export const imageMessageController = async (req, res) => {
         const { prompt, chatId, isPublished } = req.body;
         
         const chat = await Chat.findOne({userId, _id: chatId});
+        
+        if (!chat) {
+            return res.status(404).json({ 
+                success: false, 
+                message: "Chat not found" 
+            });
+        }
 
         chat.messages.push({ 
             role: "user", 
@@ -114,10 +159,13 @@ export const imageMessageController = async (req, res) => {
 
         chat.messages.push(reply);
         await chat.save();
-
         await User.updateOne({ _id: userId }, { $inc: { credits: -2 } });
         
     } catch (error) {
-        res.json({ success: false, message: error.message || "Failed to generate image" });
+        console.error('❌ Image Error:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: error.message || "Failed to generate image" 
+        });
     }
 }
