@@ -8,7 +8,7 @@ const getAuthToken = () => {
 // API call helper
 const apiCall = async (endpoint, options = {}) => {
     const token = getAuthToken();
-    
+
     const config = {
         headers: {
             'Content-Type': 'application/json',

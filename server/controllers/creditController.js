@@ -215,20 +215,20 @@ export const getUserTransactions = async (req, res) => {
 export const createTestTransaction = async (req, res) => {
     try {
         const { planId, userId } = req.body;
-        
+
         // Use default values if not provided
         const testUserId = userId || req.user?._id || '691dc2972c867779bd5d4f87';
         const testPlanId = planId || 'pro';
-        
+
         const plan = plans.find(p => p._id === testPlanId);
-        
+
         if (!plan) {
             return res.status(400).json({
                 success: false,
                 message: 'Invalid plan'
             });
         }
-        
+
         // Create transaction
         const transaction = await Transaction.create({
             userId: testUserId,
@@ -238,7 +238,7 @@ export const createTestTransaction = async (req, res) => {
             isPaid: false,
             razorpayOrderId: 'order_test_' + Date.now()
         });
-        
+
         res.json({
             success: true,
             message: 'Test transaction created',
@@ -250,7 +250,7 @@ export const createTestTransaction = async (req, res) => {
                 amount: plan.price
             }
         });
-        
+
     } catch (error) {
         console.error('Create Test Transaction Error:', error);
         res.status(500).json({

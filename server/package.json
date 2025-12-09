@@ -21,6 +21,7 @@
     "imagekit": "^6.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.20.0",
+    "nodemailer": "^7.0.11",
     "openai": "^6.9.1",
     "razorpay": "^2.9.6",
     "svix": "^1.81.0"

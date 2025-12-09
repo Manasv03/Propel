@@ -3,13 +3,15 @@ import { getPlans, createRazorpayOrder, verifyRazorpayPayment } from '../../serv
 import { useAppContext } from '../context/AppContext'
 import Loading from './Loading'
 import { assets } from '../assets/assets'
+import toast from 'react-hot-toast'
 
 const Credits = () => {
   const { user, setUser } = useAppContext()
-  
+
   const [plans, setPlans] = useState([])
   const [loading, setLoading] = useState(true)
   const [purchasing, setPurchasing] = useState(null) // Track which plan is being purchased
+  const { token, axios } = useAppContext()
 
   // Fetch plans from backend
   const fetchPlans = async () => {
@@ -17,12 +19,13 @@ const Credits = () => {
       const data = await getPlans()
       if (data.success) {
         setPlans(data.plans)
+      } else {
+        toast.error(data.message || "Failed to fetch plans")
       }
     } catch (error) {
-      console.error('Error fetching plans:', error)
-    } finally {
-      setLoading(false)
+      toast.error(error.message)
     }
+    setLoading(false)
   }
 
   // Load Razorpay script
@@ -43,7 +46,7 @@ const Credits = () => {
 
       // Check if user is logged in
       if (!user) {
-        alert('Please login to purchase credits')
+        toast.error('Please login to purchase credits')
         return
       }
 
@@ -83,7 +86,7 @@ const Credits = () => {
 
           if (result.success) {
             alert(`🎉 Payment Successful! ${result.credits} credits added to your account.`)
-            
+
             // Update user credits in context
             setUser(prev => ({
               ...prev,
@@ -102,7 +105,7 @@ const Credits = () => {
           color: '#9333ea' // Purple color matching your theme
         },
         modal: {
-          ondismiss: function() {
+          ondismiss: function () {
             console.log('Payment cancelled by user')
             setPurchasing(null)
           }
@@ -110,7 +113,7 @@ const Credits = () => {
       }
 
       const rzp = new window.Razorpay(options)
-      
+
       rzp.on('payment.failed', function (response) {
         alert('Payment failed! Please try again.')
         console.error('Payment failed:', response.error)
@@ -133,9 +136,9 @@ const Credits = () => {
   if (loading) return <Loading />
 
   return (
-    <div className='max-w-7xl h-screen overflow-y-scroll mx-auto px-4 sm:px-6 lg:px-8 py-12'>
+    <div className='max-w-7xl h-screen overflow-y-scroll mx-auto px-4 sm:px-6 lg:px-8 py-7'>
       {/* Header */}
-      <div className='text-center mb-10'>
+      <div className='text-center mb-5'>
         <h2 className='text-3xl font-semibold text-gray-800 dark:text-white mb-2'>
           Credit Plans
         </h2>
@@ -162,13 +165,12 @@ const Credits = () => {
       {/* Plans Grid */}
       <div className='flex flex-wrap justify-center gap-8'>
         {plans.map((plan) => (
-          <div 
-            key={plan._id} 
-            className={`border border-gray-200 dark:border-purple-700 rounded-4xl shadow hover:shadow-xl transition-all duration-300 p-6 min-w-[300px] flex flex-col ${
-              plan._id === "pro" 
-                ? "bg-purple-50 dark:bg-purple-900/50 border-2 border-purple-500 scale-105" 
-                : "bg-white dark:bg-transparent"
-            }`}
+          <div
+            key={plan._id}
+            className={`border border-gray-200 dark:border-purple-700 rounded-4xl shadow hover:shadow-xl transition-all duration-300 p-6 min-w-[300px] flex flex-col ${plan._id === "pro"
+              ? "bg-purple-50 dark:bg-purple-900/50 border-2 border-purple-500 scale-105"
+              : "bg-white dark:bg-transparent"
+              }`}
           >
             {/* Recommended Badge */}
             {plan._id === "pro" && (
@@ -189,7 +191,7 @@ const Credits = () => {
               <p className='text-sm text-gray-600 dark:text-purple-200 mb-4'>
                 {plan.credits} credits
               </p>
-              
+
               <ul className='space-y-2 mb-6'>
                 {plan.features.map((feature, index) => (
                   <li key={index} className='flex items-start gap-2 text-sm text-gray-700 dark:text-purple-200'>
@@ -200,14 +202,13 @@ const Credits = () => {
               </ul>
             </div>
 
-            <button 
+            <button
               onClick={() => handlePurchase(plan._id)}
               disabled={purchasing === plan._id}
-              className={`mt-auto w-full font-medium py-3 rounded-full transition-all duration-300 ${
-                plan._id === "pro"
-                  ? "bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white"
-                  : "bg-gray-800 hover:bg-gray-900 dark:bg-purple-700 dark:hover:bg-purple-800 text-white"
-              } disabled:opacity-50 disabled:cursor-not-allowed`}
+              className={`mt-auto w-full font-medium py-3 rounded-full transition-all duration-300 ${plan._id === "pro"
+                ? "bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white"
+                : "bg-gray-800 hover:bg-gray-900 dark:bg-purple-700 dark:hover:bg-purple-800 text-white"
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               {purchasing === plan._id ? (
                 <span className='flex items-center justify-center gap-2'>
@@ -226,7 +227,7 @@ const Credits = () => {
       </div>
 
       {/* Footer Info */}
-      <div className='mt-12 text-center text-sm text-gray-600 dark:text-purple-200'>
+      <div className='mt-10 text-center text-sm text-gray-600 dark:text-purple-200'>
         <p>🔒 Secure payment powered by Razorpay</p>
         <p className='mt-2'>All transactions are encrypted and secure</p>
       </div>
