@@ -10,6 +10,13 @@ import Loading from './pages/Loading'
 import Login from './pages/Login'
 import { useAppContext } from './context/AppContext'
 import { Toaster } from 'react-hot-toast'
+import ContactUs from './pages/policies/ContactUs'
+import ShippingPolicy from './pages/policies/ShippingPolicy'
+import TermsAndConditions from './pages/policies/TermsAndConditions'
+import RefundPolicy from './pages/policies/RefundPolicy'
+import PrivacyPolicy from './pages/policies/PrivacyPolicy'
+
+import PolicyButton from './components/PolicyButton'
 
 const App = () => {
 
@@ -18,6 +25,18 @@ const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { pathname } = useLocation()
+
+  if (pathname.startsWith('/policy')) {
+    return (
+      <Routes>
+        <Route path='/policy/contact-us' element={<ContactUs />} />
+        <Route path='/policy/shipping-policy' element={<ShippingPolicy />} />
+        <Route path='/policy/terms-and-conditions' element={<TermsAndConditions />} />
+        <Route path='/policy/cancellation-refund' element={<RefundPolicy />} />
+        <Route path='/policy/privacy-policy' element={<PrivacyPolicy />} />
+      </Routes>
+    )
+  }
 
   if (pathname === '/loading' || loadingUser) return <Loading />;
 
@@ -35,6 +54,7 @@ const App = () => {
               <Route path='/credits' element={<Credits />} />
               <Route path='/community' element={<Community />} />
             </Routes>
+            <PolicyButton />
           </div>
         </div>
       ) : (
