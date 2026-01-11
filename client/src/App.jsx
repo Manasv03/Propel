@@ -16,8 +16,6 @@ import TermsAndConditions from './pages/policies/TermsAndConditions'
 import RefundPolicy from './pages/policies/RefundPolicy'
 import PrivacyPolicy from './pages/policies/PrivacyPolicy'
 
-import PolicyButton from './components/PolicyButton'
-
 const App = () => {
 
   const { user, loadingUser } = useAppContext();
@@ -54,7 +52,6 @@ const App = () => {
               <Route path='/credits' element={<Credits />} />
               <Route path='/community' element={<Community />} />
             </Routes>
-            <PolicyButton />
           </div>
         </div>
       ) : (

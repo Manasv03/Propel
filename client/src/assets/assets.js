@@ -60,7 +60,7 @@ export const dummyPlans = [
     {
         _id: "basic",
         name: "Basic",
-        price: 299,
+        price: 1,
         credits: 100,
         features: ['100 text generations', '50 image generations', 'Standard support', 'Access to basic models']
     },
@@ -265,7 +265,7 @@ export const dummyChats = [
                 "content": ai_image7,
                 "timestamp": 1755164001928,
             }
-            
+
         ],
         "createdAt": "2025-08-13T17:29:52.421Z",
         "updatedAt": "2025-08-14T09:39:19.046Z",

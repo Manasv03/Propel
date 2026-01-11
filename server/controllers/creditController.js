@@ -7,7 +7,7 @@ const plans = [
     {
         _id: "basic",
         name: "Basic",
-        price: 299,
+        price: 1,
         credits: 100,
         features: ['100 text generations', '50 image generations', 'Standard support', 'Access to basic models']
     },

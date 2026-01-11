@@ -3,12 +3,14 @@ import { useAppContext } from '../context/AppContext'
 import { assets } from '../assets/assets'
 import moment from 'moment'
 import toast from 'react-hot-toast'
+import PolicyModal from './PolicyModal'
 
 const SideBar = ({ isMenuOpen, setIsMenuOpen }) => {
 
   const { chats, setSelectedChat, theme, setTheme, user, navigate, createNewChat, axios, setChats, fetchUsersChats, setToken, token } = useAppContext();
 
   const [search, setSearch] = useState('');
+  const [showPolicies, setShowPolicies] = useState(false);
 
   const logout = () => {
     localStorage.removeItem('token');
@@ -113,9 +115,20 @@ const SideBar = ({ isMenuOpen, setIsMenuOpen }) => {
           {user && <img onClick={logout} src={assets.logout_icon} className='h-5 cursor-pointer block md:hidden md:group-hover:block not-dark:invert' />}
         </div>
 
+        {/* Policies */}
+        <div onClick={() => { setShowPolicies(true); setIsMenuOpen(false) }} className='flex items-center gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-2xl cursor-pointer hover:scale-103 transition-all'>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4.5 not-dark:text-black dark:text-white">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+          </svg>
+          <div className='flex flex-col text-sm'>
+            <p className='dark:text-white'>Policies</p>
+          </div>
+        </div>
+
         <img onClick={() => setIsMenuOpen(false)} src={assets.close_icon} className='absolute top-3 right-3 w-5 h-5 cursor-pointer md:hidden not-dark:invert' alt="" />
         {/*  */}
       </div>
+      <PolicyModal show={showPolicies} onClose={() => setShowPolicies(false)} />
     </>
   )
 }
