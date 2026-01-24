@@ -16,6 +16,7 @@ import TermsAndConditions from './pages/policies/TermsAndConditions'
 import RefundPolicy from './pages/policies/RefundPolicy'
 import PrivacyPolicy from './pages/policies/PrivacyPolicy'
 import Home from './pages/Home'
+import Documentation from './pages/Documentation'
 
 const App = () => {
 
@@ -59,6 +60,7 @@ const App = () => {
         ) : (
           <Routes>
             <Route path='/' element={<Home />} />
+            <Route path='/docs' element={<Documentation />} />
             <Route path='/login' element={
               <div className='bg-linear-to-b from-[#242124] to-[#000000] flex items-center justify-center h-screen w-screen'>
                 <Login />

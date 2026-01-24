@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
@@ -8,9 +9,9 @@ const Footer = () => {
                     © {new Date().getFullYear()} Propel. All rights reserved.
                 </div>
                 <div className='flex gap-8 text-gray-400'>
-                    <a href="#" className='hover:text-white transition-colors'>Privacy</a>
-                    <a href="#" className='hover:text-white transition-colors'>Terms</a>
-                    <a href="#" className='hover:text-white transition-colors'>Contact</a>
+                    <Link to="/policy/privacy-policy" className='hover:text-white transition-colors'>Privacy</Link>
+                    <Link to="/policy/terms-and-conditions" className='hover:text-white transition-colors'>Terms</Link>
+                    <Link to="/policy/contact-us" className='hover:text-white transition-colors'>Contact</Link>
                 </div>
             </div>
         </footer>

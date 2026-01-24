@@ -43,9 +43,12 @@ const Hero = () => {
                             <div className='absolute inset-0 rounded-xl ring-4 ring-white/20 group-hover:ring-white/40 transition-all' />
                         </Link>
 
-                        <button className='px-8 py-4 bg-white/5 text-white font-bold text-lg rounded-xl hover:bg-white/10 border border-white/10 transition-all backdrop-blur-sm'>
+                        <Link
+                            to='/docs'
+                            className='px-8 py-4 bg-white/5 text-white font-bold text-lg rounded-xl hover:bg-white/10 border border-white/10 transition-all backdrop-blur-sm'
+                        >
                             View Documentation
-                        </button>
+                        </Link>
                     </div>
                 </motion.div>
 
