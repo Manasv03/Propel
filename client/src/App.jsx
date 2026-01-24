@@ -15,6 +15,7 @@ import ShippingPolicy from './pages/policies/ShippingPolicy'
 import TermsAndConditions from './pages/policies/TermsAndConditions'
 import RefundPolicy from './pages/policies/RefundPolicy'
 import PrivacyPolicy from './pages/policies/PrivacyPolicy'
+import Home from './pages/Home'
 
 const App = () => {
 
@@ -41,24 +42,32 @@ const App = () => {
   return (
     <>
       <Toaster />
-      {!isMenuOpen && <img src={assets.menu_icon} className='absolute top-3 left-3 w-8 h-8 cursor-pointer md:hidden not-dark:invert' onClick={() => setIsMenuOpen(true)} />}
+      {user && !isMenuOpen && <img src={assets.menu_icon} className='absolute top-3 left-3 w-8 h-8 cursor-pointer md:hidden not-dark:invert' onClick={() => setIsMenuOpen(true)} />}
 
-      {user ? (
-        <div className='dark:bg-linear-to-b from-[#242124] to-[#000000] dark:text-white'>
-          <div className='flex h-screen w-screen'>
-            <SideBar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
-            <Routes >
-              <Route path='/' element={<ChatBox />} />
-              <Route path='/credits' element={<Credits />} />
-              <Route path='/community' element={<Community />} />
-            </Routes>
+      {
+        user ? (
+          <div className='dark:bg-linear-to-b from-[#242124] to-[#000000] dark:text-white'>
+            <div className='flex h-screen w-screen'>
+              <SideBar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+              <Routes >
+                <Route path='/' element={<ChatBox />} />
+                <Route path='/credits' element={<Credits />} />
+                <Route path='/community' element={<Community />} />
+              </Routes>
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className='bg-linear-to-b from-[#242124] to-[#000000] flex items-center justify-center h-screen w-screen'>
-          <Login />
-        </div>
-      )}
+        ) : (
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/login' element={
+              <div className='bg-linear-to-b from-[#242124] to-[#000000] flex items-center justify-center h-screen w-screen'>
+                <Login />
+              </div>
+            } />
+            <Route path='*' element={<Home />} />
+          </Routes>
+        )
+      }
     </>
   )
 }
