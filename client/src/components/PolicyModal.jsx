@@ -1,31 +1,57 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { X, FileText, Phone, Truck, ShieldCheck, RefreshCw } from 'lucide-react';
 
 const PolicyModal = ({ show, onClose }) => {
-    if (!show) return null;
+  if (!show) return null;
 
-    return (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[1000] p-4">
-            <div className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-700 rounded-xl p-6 max-w-md w-full relative shadow-2xl animate-in fade-in zoom-in duration-200">
-                <button
-                    onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 text-center">Legal & Policies</h3>
-                <div className="flex flex-col gap-3">
-                    <Link to="/policy/contact-us" onClick={onClose} className="bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 py-3 px-4 rounded-lg text-center transition-colors font-medium">Contact Us</Link>
-                    <Link to="/policy/shipping-policy" onClick={onClose} className="bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 py-3 px-4 rounded-lg text-center transition-colors font-medium">Delivery Policy</Link>
-                    <Link to="/policy/terms-and-conditions" onClick={onClose} className="bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 py-3 px-4 rounded-lg text-center transition-colors font-medium">Terms & Conditions</Link>
-                    <Link to="/policy/cancellation-refund" onClick={onClose} className="bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 py-3 px-4 rounded-lg text-center transition-colors font-medium">Cancellation & Refund</Link>
-                    <Link to="/policy/privacy-policy" onClick={onClose} className="bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 py-3 px-4 rounded-lg text-center transition-colors font-medium">Privacy Policy</Link>
-                </div>
-            </div>
+  const policyLinks = [
+    { label: "Contact Us", path: "/policy/contact-us", icon: Phone },
+    { label: "Delivery Policy", path: "/policy/shipping-policy", icon: Truck },
+    { label: "Terms & Conditions", path: "/policy/terms-and-conditions", icon: FileText },
+    { label: "Cancellation & Refund", path: "/policy/cancellation-refund", icon: RefreshCw },
+    { label: "Privacy Policy", path: "/policy/privacy-policy", icon: ShieldCheck }
+  ];
+
+  return (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1000] p-4">
+      <div className="bg-white dark:bg-[#151320] border border-[#E5E2EE] dark:border-white/[0.08] rounded-[20px] p-6 sm:p-7 max-w-md w-full relative shadow-2xl animate-in fade-in zoom-in duration-200">
+        
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-5 right-5 text-[#645D75] dark:text-[#9C97AE] hover:text-[#0F0C1B] dark:hover:text-[#F4F2F8] p-1 rounded-lg transition-colors cursor-pointer"
+          aria-label="Close policies modal"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Modal Header */}
+        <h3 className="font-geist text-[22px] font-bold text-[#0F0C1B] dark:text-[#F4F2F8] mb-6 text-center">
+          Legal & Policies
+        </h3>
+
+        {/* Policy Links Stack */}
+        <div className="flex flex-col gap-2.5">
+          {policyLinks.map((policy) => {
+            const Icon = policy.icon;
+            return (
+              <Link 
+                key={policy.path}
+                to={policy.path} 
+                onClick={onClose} 
+                className="bg-[#F4F3F8] dark:bg-[#0B0A12] hover:bg-[#EDE9F6] dark:hover:bg-[#1E1730] border border-[#E5E2EE] dark:border-white/[0.08] text-[#0F0C1B] dark:text-[#F4F2F8] py-3 px-4 rounded-xl flex items-center gap-3 transition-colors font-medium text-[14px] group"
+              >
+                <Icon className="w-4 h-4 text-[#7C3AED] shrink-0 group-hover:scale-110 transition-transform" />
+                <span>{policy.label}</span>
+              </Link>
+            );
+          })}
         </div>
-    );
+
+      </div>
+    </div>
+  );
 };
 
 export default PolicyModal;

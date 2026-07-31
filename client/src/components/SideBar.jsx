@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
-import { useAppContext } from '../context/AppContext'
-import { assets } from '../assets/assets'
-import moment from 'moment'
-import toast from 'react-hot-toast'
-import PolicyModal from './PolicyModal'
+import React, { useState } from 'react';
+import { useAppContext } from '../context/AppContext';
+import moment from 'moment';
+import toast from 'react-hot-toast';
+import PolicyModal from './PolicyModal';
+import PropelLogo from './PropelLogo';
+import { Plus, Search, MessageSquare, Image as ImageIcon, CreditCard, Moon, Sun, User as UserIcon, LogOut, FileText, Trash2, X } from 'lucide-react';
 
 const SideBar = ({ isMenuOpen, setIsMenuOpen }) => {
 
-  const { chats, setSelectedChat, theme, setTheme, user, navigate, createNewChat, axios, setChats, fetchUsersChats, setToken, token } = useAppContext();
+  const { chats, setSelectedChat, theme, setTheme, user, navigate, createNewChat, axios, setChats, fetchUsersChats, setToken, token, selectedChat } = useAppContext();
 
   const [search, setSearch] = useState('');
   const [showPolicies, setShowPolicies] = useState(false);
@@ -16,7 +17,7 @@ const SideBar = ({ isMenuOpen, setIsMenuOpen }) => {
     localStorage.removeItem('token');
     setToken(null);
     toast.success('Logged out successfully');
-  }
+  };
 
   const deleteChat = async (e, chatId) => {
     try {
@@ -32,7 +33,7 @@ const SideBar = ({ isMenuOpen, setIsMenuOpen }) => {
     } catch (error) {
       toast.error(error.message);
     }
-  }
+  };
 
   return (
     <>
@@ -40,97 +41,184 @@ const SideBar = ({ isMenuOpen, setIsMenuOpen }) => {
       {isMenuOpen && (
         <div
           onClick={() => setIsMenuOpen(false)}
-          className='fixed inset-0 z-10 bg-black/50 md:hidden cursor-pointer backdrop-blur-sm'
-        ></div>
+          className='fixed inset-0 z-20 bg-black/60 md:hidden cursor-pointer backdrop-blur-sm'
+          aria-hidden="true"
+        />
       )}
 
-      <div className={`flex flex-col h-screen min-w-72 p-5 from-[#242124]/30 to-[#000000]/30 border-r border-[#80609F]/30 backdrop-blur-3xl transition-all duration-500 max-md:fixed left-0 z-20 ${!isMenuOpen && 'max-md:-translate-x-full'} `}>
-        <img src={theme === 'dark' ? assets.logo_new : assets.logo_new} alt='' className='w-full max-w-48' />
+      <aside className={`flex flex-col h-screen w-72 p-4 bg-white dark:bg-[#151320] border-r border-[#E5E2EE] dark:border-white/[0.08] text-[#0F0C1B] dark:text-[#F4F2F8] transition-all duration-300 max-md:fixed left-0 top-0 z-30 ${!isMenuOpen && 'max-md:-translate-x-full'}`}>
+        
+        {/* CREATIVE PROPEL LOGO BLOCK */}
+        <div className="flex items-center justify-between px-1 pt-2 pb-4">
+          <PropelLogo size="md" showBadge={true} />
 
-        {/* NEw CHAT */}
-        <button onClick={createNewChat} className='flex justify-center items-center w-full py-2 mt-10 text-white bg-linear-to-r from-[#A456F7] to-[#3D81F6] text-sm rounded-2xl cursor-pointer'>
-          <span className='mr-2 text-xl'>+</span>New Chat
+          {/* Close button for mobile */}
+          <button 
+            onClick={() => setIsMenuOpen(false)}
+            className="md:hidden text-[#645D75] dark:text-[#9C97AE] hover:text-[#0F0C1B] dark:hover:text-[#F4F2F8] p-1 rounded-md cursor-pointer"
+            aria-label="Close sidebar"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* NEW CHAT BUTTON */}
+        <button 
+          onClick={createNewChat} 
+          className="flex justify-center items-center gap-2 w-full py-3 mt-1 text-white bg-[#7C3AED] hover:bg-[#6D28D9] text-[14px] font-medium rounded-xl transition-all duration-200 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#7C3AED] focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-[#151320] cursor-pointer shadow-sm"
+        >
+          <Plus className="w-4 h-4" />
+          <span>New Chat</span>
         </button>
 
-        {/* SEARCH */}
-        <div className='flex items-center gap-2 p-3 mt-4 border border-gray-400 dark:border-white/20 rounded-2xl'>
-          <img src={assets.search_icon} className='w-4 not-dark:invert' alt="" />
-          <input onChange={(e) => setSearch(e.target.value)} value={search} type="text" placeholder='Search Conversation' className='text-xs placeholder:text-gray-400 outline-none' />
+        {/* SEARCH INPUT */}
+        <div className="flex items-center gap-2.5 px-3 py-2.5 mt-4 bg-[#F4F3F8] dark:bg-[#0B0A12] border border-[#E5E2EE] dark:border-white/[0.12] rounded-xl focus-within:border-[#7C3AED] focus-within:ring-1 focus-within:ring-[#7C3AED]">
+          <Search className="w-4 h-4 text-[#645D75] dark:text-[#9C97AE]" />
+          <input 
+            onChange={(e) => setSearch(e.target.value)} 
+            value={search} 
+            type="text" 
+            placeholder="Search Conversations..." 
+            className="w-full text-[13px] bg-transparent text-[#0F0C1B] dark:text-[#F4F2F8] placeholder-[#645D75] dark:placeholder-[#6B6478] outline-none" 
+          />
         </div>
 
-        {/* RECENT CHAT */}
-        {chats.length > 0 && <p className='mt-4 text-sm'>Recent Chats</p>}
-        <div className='flex-1 overflow-y-scroll mt-3 text-sm space-y-3'>
-          {
-            chats.filter((chat) => chat.messages[0] ? chat.messages[0]?.content.toLowerCase().includes(search.toLowerCase()) : chat.name.toLowerCase().includes(search.toLowerCase())).map((chat) => (
-              <div onClick={() => { navigate('/'); setSelectedChat(chat); setIsMenuOpen(false) }} key={chat._id} className='p-2 px-4 dark:bg-[#57317C]/10 border border-gray-300 dark:border-[#80609F]/15 rounded-2xl cursor-pointer flex justify-between group'>
-                <div>
-                  <p className='truncate w-full'>
-                    {chat.messages.length > 0 ? chat.messages[0].content.slice(0, 32) : chat.name}
-                  </p>
-                  <p className='text-xs text-gray-500 dark:text-[#B1A6CB]'>{moment(chat.updatedAt).fromNow()}</p>
-                </div>
-                <img onClick={(e) => toast.promise(deleteChat(e, chat._id), { loading: 'deleting...' })} src={assets.bin_icon} className='block md:hidden md:group-hover:block w-4 cursor-pointer not-dark:invert' alt="" />
-              </div>
-            ))
-          }
+        {/* RECENT CHATS LIST */}
+        <div className="mt-5 flex items-center justify-between px-1">
+          <span className="text-[12px] font-mono uppercase tracking-wider text-[#645D75] dark:text-[#9C97AE]">
+            Recent Chats
+          </span>
         </div>
 
-        {/* Community IMG */}
-        <div onClick={() => { navigate('/community'); setIsMenuOpen(false) }} className='flex items-center gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-2xl cursor-pointer hover:scale-103 transition-all'>
-          <img src={assets.gallery_icon} className='w-4.5 not-dark:invert' alt="" />
-          <div className='flex flex-col text-sm'>
-            <p>Community Images</p>
-          </div>
+        <div className="flex-1 overflow-y-scroll mt-2 space-y-1 pr-1">
+          {chats.length > 0 ? (
+            chats
+              .filter((chat) => 
+                chat.messages[0] 
+                  ? chat.messages[0]?.content.toLowerCase().includes(search.toLowerCase()) 
+                  : chat.name.toLowerCase().includes(search.toLowerCase())
+              )
+              .map((chat) => {
+                const isSelected = selectedChat?._id === chat._id;
+                return (
+                  <div 
+                    key={chat._id} 
+                    onClick={() => { navigate('/'); setSelectedChat(chat); setIsMenuOpen(false); }} 
+                    className={`p-2.5 px-3 rounded-lg cursor-pointer flex items-center justify-between group transition-colors ${
+                      isSelected
+                        ? 'bg-[#EDE9F6] dark:bg-[#1E1730] border border-[#7C3AED]/40 text-[#7C3AED] dark:text-[#F4F2F8]'
+                        : 'bg-transparent hover:bg-[#F4F3F8] dark:hover:bg-[#1E1730]/60 border border-transparent text-[#645D75] dark:text-[#9C97AE] hover:text-[#0F0C1B] dark:hover:text-[#F4F2F8]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 overflow-hidden flex-1 mr-2">
+                      <MessageSquare className={`w-4 h-4 shrink-0 ${isSelected ? 'text-[#7C3AED]' : 'text-[#645D75] dark:text-[#9C97AE]'}`} />
+                      <div className="overflow-hidden">
+                        <p className="truncate text-[13px] font-medium leading-tight">
+                          {chat.messages.length > 0 ? chat.messages[0].content.slice(0, 32) : chat.name}
+                        </p>
+                        <p className="text-[11px] text-[#645D75]/70 dark:text-[#9C97AE]/70 mt-0.5">
+                          {moment(chat.updatedAt).fromNow()}
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={(e) => toast.promise(deleteChat(e, chat._id), { loading: 'Deleting...' })}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity p-1 text-[#645D75] dark:text-[#9C97AE] hover:text-[#EF4444] rounded cursor-pointer"
+                      title="Delete chat"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                );
+              })
+          ) : (
+            <p className="text-[12px] text-[#645D75] dark:text-[#9C97AE] px-2 py-4 italic">No chats yet</p>
+          )}
         </div>
 
-        {/* CREDIT OPTION */}
-        <div onClick={() => { navigate('/credits'); setIsMenuOpen(false) }} className='flex items-center gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-2xl cursor-pointer hover:scale-103 transition-all'>
-          <img src={assets.diamond_icon} className='w-4.5 dark:invert' alt="" />
-          <div className='flex flex-col text-sm'>
-            <p>Credits : {user?.credits}</p>
-            <p className='text-xs text-gray-400'>Purchase CREDITS to use PROPEL</p>
-          </div>
-        </div>
+        {/* BOTTOM NAV ITEMS & UTILITIES */}
+        <div className="pt-3 border-t border-[#E5E2EE] dark:border-white/[0.08] space-y-1 mt-auto">
+          
+          {/* Community Images */}
+          <button 
+            onClick={() => { navigate('/community'); setIsMenuOpen(false); }} 
+            className="w-full flex items-center gap-3 p-2.5 px-3 rounded-lg text-[13px] text-[#645D75] dark:text-[#9C97AE] hover:text-[#0F0C1B] dark:hover:text-[#F4F2F8] hover:bg-[#F4F3F8] dark:hover:bg-[#1E1730] transition-colors text-left cursor-pointer"
+          >
+            <ImageIcon className="w-4 h-4 text-[#645D75] dark:text-[#9C97AE]" />
+            <span>Community Images</span>
+          </button>
 
-        {/* DARK MODE */}
-        <div className='flex items-center justify-between gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-2xl'>
-          <div className='flex items-center gap-2 text-sm'>
-            <img src={assets.theme_icon} className='w-4 not-dark:invert' alt="" />
-            <p>Dark Mode</p>
-          </div>
-          <label className='relative inline-flex cursor-pointer'>
-            <input onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')} type="checkbox" className='sr-only peer' checked={theme === 'dark'} />
-            <div className='w-9 h-5 bg-gray-400 rounded-full peer-checked:bg-purple-600 transition-all'>
-
+          {/* Credits Counter (Amber Icon Highlight) */}
+          <button 
+            onClick={() => { navigate('/credits'); setIsMenuOpen(false); }} 
+            className="w-full flex items-center justify-between p-2.5 px-3 rounded-lg text-[13px] bg-[#F4F3F8] dark:bg-[#0B0A12] border border-[#E5E2EE] dark:border-white/[0.06] hover:border-[#7C3AED]/30 transition-colors text-left cursor-pointer group"
+          >
+            <div className="flex items-center gap-2.5">
+              {/* Exclusive Amber Accent on Credits Icon */}
+              <CreditCard className="w-4 h-4 text-[#F59E0B]" />
+              <span className="text-[#0F0C1B] dark:text-[#F4F2F8] font-medium">Credits</span>
             </div>
-            <span className='absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform peer-checked:translate-x-4'></span>
-          </label>
-        </div>
+            <span className="text-[12px] font-mono font-semibold px-2 py-0.5 rounded bg-[#F59E0B]/10 text-[#F59E0B]">
+              {user?.credits ?? 0}
+            </span>
+          </button>
 
-        {/* User ACCOUNT */}
-        <div className='flex items-center gap-3 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-2xl cursor-pointer group '>
-          <img src={assets.user_icon} className='w-7 rounded-full' alt="" />
-          <p className='flex-1 text-sm dark:text-primary truncate'>{user ? user.name : 'Login Your Account'}</p>
-          {user && <img onClick={logout} src={assets.logout_icon} className='h-5 cursor-pointer block md:hidden md:group-hover:block not-dark:invert' />}
-        </div>
-
-        {/* Policies */}
-        <div onClick={() => { setShowPolicies(true); setIsMenuOpen(false) }} className='flex items-center gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-2xl cursor-pointer hover:scale-103 transition-all'>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4.5 not-dark:text-black dark:text-white">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-          </svg>
-          <div className='flex flex-col text-sm'>
-            <p className='dark:text-white'>Policies</p>
+          {/* Theme Toggle (Light / Dark Mode Switch) */}
+          <div className="flex items-center justify-between p-2.5 px-3 text-[13px] text-[#645D75] dark:text-[#9C97AE]">
+            <div className="flex items-center gap-2.5">
+              {theme === 'dark' ? <Moon className="w-4 h-4 text-[#7C3AED]" /> : <Sun className="w-4 h-4 text-[#F59E0B]" />}
+              <span className="text-[#0F0C1B] dark:text-[#F4F2F8] font-medium">{theme === 'dark' ? 'Dark Mode' : 'Light Mode'}</span>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input 
+                type="checkbox" 
+                className="sr-only peer" 
+                checked={theme === 'dark'} 
+                onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
+              />
+              <div className="w-8 h-4 bg-[#D8D3E5] dark:bg-[#3A3450] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-[#7C3AED]" />
+            </label>
           </div>
+
+          {/* Policies Modal Trigger */}
+          <button 
+            onClick={() => { setShowPolicies(true); setIsMenuOpen(false); }} 
+            className="w-full flex items-center gap-3 p-2.5 px-3 rounded-lg text-[13px] text-[#645D75] dark:text-[#9C97AE] hover:text-[#0F0C1B] dark:hover:text-[#F4F2F8] hover:bg-[#F4F3F8] dark:hover:bg-[#1E1730] transition-colors text-left cursor-pointer"
+          >
+            <FileText className="w-4 h-4 text-[#645D75] dark:text-[#9C97AE]" />
+            <span>Policies</span>
+          </button>
+
+          {/* User Account & Logout */}
+          <div className="flex items-center justify-between p-2.5 px-3 bg-[#F4F3F8] dark:bg-[#0B0A12] border border-[#E5E2EE] dark:border-white/[0.06] rounded-xl mt-2">
+            <div className="flex items-center gap-2.5 overflow-hidden">
+              <div className="w-7 h-7 rounded-full bg-[#EDE9F6] dark:bg-[#1E1730] border border-[#7C3AED]/20 text-[#7C3AED] dark:text-[#F4F2F8] flex items-center justify-center text-[12px] font-semibold shrink-0">
+                {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+              </div>
+              <span className="text-[13px] font-medium text-[#0F0C1B] dark:text-[#F4F2F8] truncate">
+                {user ? user.name : 'Account'}
+              </span>
+            </div>
+
+            {user && (
+              <button 
+                onClick={logout} 
+                className="text-[#645D75] dark:text-[#9C97AE] hover:text-[#EF4444] transition-colors p-1 cursor-pointer" 
+                title="Logout"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
         </div>
 
-        <img onClick={() => setIsMenuOpen(false)} src={assets.close_icon} className='absolute top-3 right-3 w-5 h-5 cursor-pointer md:hidden not-dark:invert' alt="" />
-        {/*  */}
-      </div>
+      </aside>
+
       <PolicyModal show={showPolicies} onClose={() => setShowPolicies(false)} />
     </>
-  )
-}
+  );
+};
 
-export default SideBar
+export default SideBar;

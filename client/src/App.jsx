@@ -47,7 +47,7 @@ const App = () => {
 
       {
         user ? (
-          <div className='dark:bg-linear-to-b from-[#242124] to-[#000000] dark:text-white'>
+          <div className='bg-[#F8F7FC] dark:bg-[#0B0A12] text-[#0F0C1B] dark:text-[#F4F2F8] transition-colors'>
             <div className='flex h-screen w-screen'>
               <SideBar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
               <Routes >
@@ -61,11 +61,7 @@ const App = () => {
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/docs' element={<Documentation />} />
-            <Route path='/login' element={
-              <div className='bg-linear-to-b from-[#242124] to-[#000000] flex items-center justify-center h-screen w-screen'>
-                <Login />
-              </div>
-            } />
+            <Route path='/login' element={<Login />} />
             <Route path='*' element={<Home />} />
           </Routes>
         )

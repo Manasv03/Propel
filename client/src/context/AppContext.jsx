@@ -51,10 +51,18 @@ export const AppContextProvider = ({children}) => {
            if(data.success){
             setUser(data.user)
            }else{
-            toast.error(data.message)
+            localStorage.removeItem('token')
+            setToken(null)
+            setUser(null)
            }
         } catch (error) {
-            toast.error(error.message)
+            if(error.response && error.response.status === 401){
+                localStorage.removeItem('token')
+                setToken(null)
+                setUser(null)
+            } else {
+                console.error('User authentication error:', error.message)
+            }
         }finally{
             setLoadingUser(false)
         }
@@ -95,9 +103,11 @@ export const AppContextProvider = ({children}) => {
     useEffect(() => {
         if(theme === 'dark'){
             document.documentElement.classList.add('dark');
+            document.body.classList.add('dark');
         }
         else{
             document.documentElement.classList.remove('dark');
+            document.body.classList.remove('dark');
         }
         localStorage.setItem('theme', theme);
     }, [theme]);

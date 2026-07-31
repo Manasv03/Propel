@@ -27,8 +27,8 @@ const Documentation = () => {
 
             <main className='pt-32 pb-20 max-w-4xl mx-auto px-6 relative z-10'>
                 <div className='mb-16 text-center'>
-                    <h1 className='text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-br from-white to-gray-500'>User Guide</h1>
-                    <p className='text-xl text-gray-400'>Master the art of generation with Propel.</p>
+                    <h1 className='text-5xl font-bold mb-6 text-[#F4F2F8]'>User Guide</h1>
+                    <p className='text-xl text-[#9C97AE]'>Master the art of generation with Propel.</p>
                 </div>
 
                 <DocSection title="Intelligent Chat" icon={<MessageSquare className="w-6 h-6" />}>

@@ -18,10 +18,10 @@ const Navbar = () => {
             }`}>
             <div className='max-w-7xl mx-auto px-4 sm:px-6 h-16 md:h-20 flex items-center justify-between'>
                 <div className='flex items-center gap-2'>
-                    <div className='w-8 h-8 md:w-10 md:h-10 bg-gradient-to-tr from-purple-600 to-blue-500 rounded-lg flex items-center justify-center'>
+                    <div className='w-8 h-8 md:w-10 md:h-10 bg-[#7C3AED] rounded-lg flex items-center justify-center'>
                         <Sparkles className='text-white w-5 h-5 md:w-6 md:h-6' />
                     </div>
-                    <span className='text-xl md:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70'>
+                    <span className='text-xl md:text-2xl font-bold text-[#F4F2F8]'>
                         Propel
                     </span>
                 </div>
