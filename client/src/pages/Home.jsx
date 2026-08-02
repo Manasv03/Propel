@@ -1,12 +1,16 @@
 import React from 'react';
 import Hero from '../components/Hero';
 import FeatureGrid from '../components/FeatureGrid';
+import Navbar from '../components/Navbar';
 
 const Home = () => {
   return (
     <main className="min-h-screen bg-[#0B0A12] text-[#F4F2F8] selection:bg-[#7C3AED] selection:text-white overflow-x-hidden relative">
       
-      {/* Hero Section Container with Side Borders & Corner Accents */}
+      {/* 1. Full-Width Top Navbar (Outside and Above side-bordered container) */}
+      <Navbar />
+
+      {/* 2. Hero Section Container with Side Borders & Corner Accents */}
       <div className="max-w-[1340px] mx-auto border-x border-white/[0.08] relative">
         
         {/* Left Outer Side Status Dot & Label */}
@@ -37,8 +41,10 @@ const Home = () => {
         <Hero />
       </div>
 
-      {/* Section 2: Proof + Features Bento Grid (Borderless & Wide Aspect Ratio) */}
-      <FeatureGrid />
+      {/* Section 2: Features Bento Grid with #features scroll anchor */}
+      <div id="features">
+        <FeatureGrid />
+      </div>
 
     </main>
   );

@@ -122,19 +122,19 @@ const ChatBox = () => {
         {/* INPUT FORM CONTAINER */}
         <form 
           onSubmit={onSubmit} 
-          className="bg-white dark:bg-[#151320] border border-[#E5E2EE] dark:border-white/[0.08] focus-within:border-[#7C3AED]/60 focus-within:ring-2 focus-within:ring-[#7C3AED]/30 rounded-2xl p-2.5 pl-3.5 flex items-center gap-2 transition-all shadow-lg"
+          className="bg-white dark:bg-[#151320] border border-[#E5E2EE] dark:border-white/[0.08] focus-within:border-[#7C3AED]/60 focus-within:ring-2 focus-within:ring-[#7C3AED]/30 rounded-2xl p-1.5 sm:p-2.5 pl-2.5 sm:pl-3.5 flex items-center gap-1.5 sm:gap-2 transition-all shadow-lg"
         >
           {/* Mode Selector Dropdown */}
           <div className="relative shrink-0">
             <select 
               onChange={(e) => setMode(e.target.value)} 
               value={mode} 
-              className="appearance-none bg-[#F4F3F8] dark:bg-[#1E1730] border border-[#E5E2EE] dark:border-white/[0.12] text-[#0F0C1B] dark:text-[#F4F2F8] text-[13px] font-medium py-2 pl-3 pr-8 rounded-xl outline-none focus:ring-1 focus:ring-[#7C3AED] cursor-pointer"
+              className="appearance-none bg-[#F4F3F8] dark:bg-[#1E1730] border border-[#E5E2EE] dark:border-white/[0.12] text-[#0F0C1B] dark:text-[#F4F2F8] text-[12px] sm:text-[13px] font-medium py-1.5 sm:py-2 pl-2 sm:pl-3 pr-6 sm:pr-8 rounded-xl outline-none focus:ring-1 focus:ring-[#7C3AED] cursor-pointer"
             >
               <option value="text">Text (1 Credit)</option>
               <option value="image">Image (2 Credits)</option>
             </select>
-            <ChevronDown className="w-3.5 h-3.5 text-[#645D75] dark:text-[#9C97AE] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <ChevronDown className="w-3.5 h-3.5 text-[#645D75] dark:text-[#9C97AE] absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
 
           {/* Prompt Input Textarea / Input */}
@@ -143,7 +143,7 @@ const ChatBox = () => {
             value={prompt} 
             type="text" 
             placeholder="Type your prompt here..." 
-            className="flex-1 bg-transparent text-[#0F0C1B] dark:text-[#F4F2F8] placeholder-[#645D75] dark:placeholder-[#6B6478] text-[14px] outline-none px-2" 
+            className="flex-1 bg-transparent text-[#0F0C1B] dark:text-[#F4F2F8] placeholder-[#645D75] dark:placeholder-[#6B6478] text-[13px] sm:text-[14px] outline-none px-1 sm:px-2 min-w-0" 
             required 
             disabled={loading}
           />

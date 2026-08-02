@@ -130,7 +130,7 @@ const Credits = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="w-full h-screen overflow-hidden flex flex-col justify-center items-center p-4 sm:p-6 lg:p-8 gap-4 sm:gap-6 bg-[#F8F7FC] dark:bg-[#0B0A12] text-[#0F0C1B] dark:text-[#F4F2F8] transition-colors max-w-7xl mx-auto">
+    <div className="w-full min-h-screen md:h-screen overflow-y-auto md:overflow-hidden flex flex-col justify-start md:justify-center items-center p-4 sm:p-6 lg:p-8 gap-4 sm:gap-6 bg-[#F8F7FC] dark:bg-[#0B0A12] text-[#0F0C1B] dark:text-[#F4F2F8] transition-colors max-w-7xl mx-auto">
 
       {/* Top Header & Balance */}
       <div className="text-center shrink-0">

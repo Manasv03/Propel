@@ -11,7 +11,7 @@ const Loading = () => {
     const timeout = setTimeout(() => {
       fetchUser();
       navigate('/');
-    }, 8000);
+    }, 1500);
     return () => clearTimeout(timeout);
   }, []);
 

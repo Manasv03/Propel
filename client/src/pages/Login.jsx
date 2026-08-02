@@ -3,9 +3,10 @@ import { useReducedMotion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { useAppContext } from '../context/AppContext';
 import { Sparkles, MessageSquare, Image as ImageIcon, Zap, Shield, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const navigate = useNavigate();
   const prefersReducedMotion = useReducedMotion();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const loginRef = useRef(null);
@@ -55,6 +56,7 @@ const Login = () => {
         } else {
           setToken(data.token);
           localStorage.setItem("token", data.token);
+          navigate('/');
         }
       } else {
         const msg = data.message || "Authentication failed";
@@ -82,6 +84,7 @@ const Login = () => {
         setToken(data.token);
         localStorage.setItem("token", data.token);
         toast.success(data.message);
+        navigate('/');
       } else {
         const msg = data.message || "OTP verification failed";
         setErrorMsg(msg);

@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import SideBar from './components/SideBar'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Route, Routes, useLocation, Navigate } from 'react-router-dom'
 import ChatBox from './components/ChatBox'
 import Credits from './pages/Credits'
 import Community from './pages/Community'
 import { assets } from './assets/assets'
 import './assets/prism.css'
+import { Menu } from 'lucide-react'
 import Loading from './pages/Loading'
 import Login from './pages/Login'
 import { useAppContext } from './context/AppContext'
@@ -43,7 +44,15 @@ const App = () => {
   return (
     <>
       <Toaster />
-      {user && !isMenuOpen && <img src={assets.menu_icon} className='absolute top-3 left-3 w-8 h-8 cursor-pointer md:hidden not-dark:invert' onClick={() => setIsMenuOpen(true)} />}
+      {user && !isMenuOpen && (
+        <button 
+          onClick={() => setIsMenuOpen(true)}
+          className="fixed top-3 left-3 z-40 md:hidden p-2.5 rounded-xl bg-white dark:bg-[#151320] border border-[#E5E2EE] dark:border-white/[0.08] text-[#0F0C1B] dark:text-[#F4F2F8] shadow-md focus:outline-none focus:ring-2 focus:ring-[#7C3AED] cursor-pointer"
+          aria-label="Open navigation menu"
+        >
+          <Menu className="w-5 h-5 text-[#0F0C1B] dark:text-[#F4F2F8]" />
+        </button>
+      )}
 
       {
         user ? (
@@ -54,6 +63,7 @@ const App = () => {
                 <Route path='/' element={<ChatBox />} />
                 <Route path='/credits' element={<Credits />} />
                 <Route path='/community' element={<Community />} />
+                <Route path='*' element={<Navigate to='/' replace />} />
               </Routes>
             </div>
           </div>
